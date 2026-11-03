@@ -75,3 +75,22 @@ revisión; después entra como `docente.demo` (o como administrador), revísala 
 
 > **Importante:** borra estos usuarios (en `/admin/users/`, como administrador) o cambia su contraseña
 > antes de publicar el blog en internet. Contraseñas conocidas en un servidor público son un riesgo.
+
+
+## Cómo he desplegado el proyecto
+
+1. Lo primero fue preparar Debian e instalar todo lo necesario de una sola vez con: `sudo apt install git openssh-client php-cli php-sqlite php-xml php-mbstring php-intl php-curl unzip composer`
+2. Después hice un fork de `mpgprofe/miniblog` en GitHub y me traje mi copia a la máquina virtual con `git clone git@github.com:cmarher/miniblog.git`
+3. Con `composer install` bajé las dependencias del proyecto.
+4. Monté la base de datos y me creé un usuario administrador con `php bin/console create-schema`  y `php bin/console app:create-user admin "Administrador"`
+5. Por último, arranqué el servidor de pruebas con `php -S localhost:8000 -t public`  y ya pude ver el blog en el navegador.
+
+### Problemas que me surgieron
+* **La máquina virtual no se importaba. VirtualBox daba el error `E_INVALIDARG`. Me cambié de ordenador y pude descargar la `.ova` correctamente.
+* **A entrar por SSH me salía un aviso de <<REMOTE HOST IDENTIFICATION HAS CHANGED>>.** era porque mi Windows tenía guardada la huella de otra máquina con esa misma IP. Lo solucioné con `ssh-keygen -R ip` y volví a conectar
+* **El túnel SSH me llenaba la consola de `Connection refused` porque había abierto el túnel antes de arrancar el servidor de PHP, por lo que arranqué  `php -S` en la MV y recargué el navegador y funcionó.
+* **El pull request se iba al repositorio del profesor, tuve que cambiar el `base repository` a mi fork antes de crearlo.
+* **Me equivoqué escribiendo mal los comandos y también escribí mal un  mensaje de un commit pero lo corregí con `git commit --amend` antes de subirlo. 
+
+
+
